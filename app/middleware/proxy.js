@@ -18,7 +18,6 @@ module.exports = (options={}) => {
       const proxy = httpProxy.createProxyServer(
         Object.assign({
           changeOrigin: true,
-          ignorePath: true,
           secure: false,
           logLevel: 'debug'
         }, proxyConfig)
@@ -29,9 +28,10 @@ module.exports = (options={}) => {
         console.log('监听代理服务错误',err);
       });
 
-      // 处理body参数
       proxy.on('proxyReq', function (proxyReq, req, res, options) {
-        console.log('代理',ctx.request.body)
+        // 重写路径
+        const rewritedPath = req.url.replace('/V2',''); // can make any rule  
+        proxyReq.path = rewritedPath;   
         if (ctx.request.rawBody) {
           //   let bodyData = JSON.stringify(ctx.request.rawBody)
           let bodyData = ctx.request.rawBody
@@ -43,6 +43,7 @@ module.exports = (options={}) => {
         }
       })
       return new Promise((resolve, reject) => {
+        console.log('ctx.req', ctx.req.url);
         proxy.web(ctx.req, ctx.res, err => {
           if (err) {
             reject(err)

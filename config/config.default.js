@@ -40,7 +40,7 @@ module.exports = app => {
     'V2': {
       changeOrigin: true,
       target: 'http://127.0.0.1:7002',
-      pathRewrite: {'/V2' : ''}
+      pathRewrite: {'^/V2' : ''}
     }
   }
 
