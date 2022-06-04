@@ -2,7 +2,11 @@
 
 基于 Egg + AntD + Webpack 框架的 Admin 骨架项目, 文档请见: [Egg + React 解决方案](https://www.yuque.com/easy-team/egg-react)
 
+## 常见问题 
+- https://www.yuque.com/easy-team/easywebpack/var
 
+## Vscode 辅助工具
+- https://marketplace.visualstudio.com/items?itemName=hubcarl.vscode-easy-plugin#overview
 
 ## 文档
 

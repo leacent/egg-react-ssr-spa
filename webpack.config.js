@@ -34,6 +34,7 @@ module.exports = {
       }
     }
   },
+  
   done() {
     console.log('---webpack compile finish---');
   }

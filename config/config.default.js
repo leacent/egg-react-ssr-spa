@@ -20,6 +20,7 @@ module.exports = app => {
   exports.keys = '123456';
 
   exports.middleware = [
+    'proxy',
     'locals',
     'access'
   ];
@@ -34,6 +35,14 @@ module.exports = app => {
   exports.reactssr = {
     layout: path.join(app.baseDir, 'app/web/view/layout.html')
   };
+
+  exports.proxyConfig = {
+    'V2': {
+      changeOrigin: true,
+      target: 'http://127.0.0.1:7002',
+      pathRewrite: {'/V2' : ''}
+    }
+  }
 
   return exports;
 };

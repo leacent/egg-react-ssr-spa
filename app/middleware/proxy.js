@@ -1,0 +1,64 @@
+const httpProxy = require('http-proxy');
+
+module.exports = (options={}) => {
+  /**
+     * defaultOpt通用配置
+     * options特殊配置,其中defaultOpt对应proxyTabel的默认配置
+     */
+  return async function proxy(ctx, next) {
+    const proxyConfig = ctx.app.config.proxyConfig['V2']
+    const url = ctx.request.url
+    // await next()
+    
+    console.log('代理地址：', proxyConfig.target)
+    if (url.includes('public') || url.includes('spa')) return false
+    console.log('url', ctx.request.url)
+    try {
+      //创建一个代理服务
+      const proxy = httpProxy.createProxyServer(
+        Object.assign({
+          changeOrigin: true,
+          ignorePath: true,
+          secure: false,
+          logLevel: 'debug'
+        }, proxyConfig)
+      );
+
+      //监听代理服务错误
+      proxy.on('error', function (err) {
+        console.log('监听代理服务错误',err);
+      });
+
+      // 处理body参数
+      proxy.on('proxyReq', function (proxyReq, req, res, options) {
+        console.log('代理',ctx.request.body)
+        if (ctx.request.rawBody) {
+          //   let bodyData = JSON.stringify(ctx.request.rawBody)
+          let bodyData = ctx.request.rawBody
+          // incase if content-type is application/x-www-form-urlencoded -> we need to change to application/json
+          //   proxyReq.setHeader('Content-Type', 'application/x-www-form-urlencoded')
+          proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData))
+          // stream the content
+          proxyReq.write(bodyData)
+        }
+      })
+      return new Promise((resolve, reject) => {
+        proxy.web(ctx.req, ctx.res, err => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(next())
+          }
+        })
+      })
+    } catch (error) {
+      console.log('错误', error)
+      ctx.body = {
+        code: 403,
+        data: '',
+        msg: 'http-proxy代理错误'
+      };
+
+    }
+  }
+}
