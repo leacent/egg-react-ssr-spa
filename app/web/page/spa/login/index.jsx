@@ -9,7 +9,7 @@ export default class ListIndex extends Component {
     console.log('----componentDidMount-----');
   }
   getData() {
-    request.get('/V2/api/getData').then(res=> {
+    request.get('/proxy-api/user/getData').then(res=> {
       console.log('测试跨域',res.data);
     })
   }

@@ -6,13 +6,8 @@ module.exports = (options={}) => {
      * options特殊配置,其中defaultOpt对应proxyTabel的默认配置
      */
   return async function proxy(ctx, next) {
-    const proxyConfig = ctx.app.config.proxyConfig['V2']
-    const url = ctx.request.url
-    // await next()
-    
-    console.log('代理地址：', proxyConfig.target)
-    if (url.includes('public') || url.includes('spa')) return false
-    console.log('url', ctx.request.url)
+    const { proxyConfig } = ctx.app.config
+
     try {
       //创建一个代理服务
       const proxy = httpProxy.createProxyServer(

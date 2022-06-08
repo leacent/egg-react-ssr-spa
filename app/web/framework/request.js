@@ -15,7 +15,6 @@ export default {
     return res.data;
   },
   async get(url, locals = {}) {
-    console.log('locals.origin 123123', locals.origin);
     const res = await axios.get(url);
     return res.data;
   }

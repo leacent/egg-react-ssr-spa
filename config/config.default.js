@@ -20,10 +20,10 @@ module.exports = app => {
   exports.keys = '123456';
 
   exports.middleware = [
-    'proxy',
     'locals',
     'access'
   ];
+ 
 
   exports.view = {
     defaultViewEngine: 'nunjucks',
@@ -36,11 +36,12 @@ module.exports = app => {
     layout: path.join(app.baseDir, 'app/web/view/layout.html')
   };
 
-  exports.proxyConfig = {
-    'V2': {
+  
+  exports.httpProxy = {
+    '/proxy-api/user': {
       changeOrigin: true,
       target: 'http://127.0.0.1:7002',
-      pathRewrite: {'^/V2' : ''}
+      pathRewrite: {'^/proxy-api/user' : ''}
     }
   }
 
